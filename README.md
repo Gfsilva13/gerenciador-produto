@@ -1,75 +1,153 @@
-# gerenciador-produto
+# 🏦 Gerenciador de Produtos - API REST com Quarkus
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## 📘 Descrição
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+Projeto desenvolvido como parte do curso *Quarkus Avançado*. O objetivo é criar uma **API REST** API REST para gerenciar produtos.  
+A API deve permitir realizar as operações de **CRUD (Create, Read, Update, Delete)** de produtos.
 
-## Running the application in dev mode
+---
+## 🚀 Requisitos Funcionais
 
-You can run your application in dev mode that enables live coding using:
+### 1. Criar Produto
+- **Método HTTP:** `POST`
+- **Path:** `/produtos`
+- **Corpo da requisição:** JSON com os dados do produto.
+- **Status esperado:**
+    - `201 Created` em caso de sucesso.
+    - `400 Bad Request` em caso de erro de validação.
 
-```shell script
-./mvnw quarkus:dev
-```
+### 2. Listar Produtos
+- **Método HTTP:** `GET`
+- **Path:** `/produtos`
+- **Status esperado:**
+    - `200 OK` com a lista de produtos.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+### 3. Buscar Produto por ID
+- **Método HTTP:** `GET`
+- **Path:** `/produtos/{id}`
+- **Status esperado:**
+    - `200 OK` em caso de sucesso.
+    - `404 Not Found` se o produto não existir.
 
-## Packaging and running the application
+### 4. Atualizar Produto
+- **Método HTTP:** `PUT`
+- **Path:** `/produtos/{id}`
+- **Corpo da requisição:** JSON com os dados atualizados do produto.
+- **Status esperado:**
+    - `200 OK` em caso de sucesso.
+    - `400 Bad Request` em caso de erro de validação.
+    - `404 Not Found` se o produto não existir.
 
-The application can be packaged using:
+### 5. Excluir Produto
+- **Método HTTP:** `DELETE`
+- **Path:** `/produtos/{id}`
+- **Status esperado:**
+    - `204 No Content` em caso de sucesso.
+    - `404 Not Found` se o produto não existir.
 
-```shell script
-./mvnw package
-```
+---
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+## Modelo de Produto
+Cada produto deve possuir no mínimo os seguintes atributos:
+- `id` (gerado automaticamente)
+- `nome` (obrigatório)
+- `descricao` (opcional)
+- `preco` (obrigatório, maior que zero)
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+---
 
-If you want to build an _über-jar_, execute the following command:
+## Critérios de Avaliação (Exercício 1)
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+- Uso correto dos **métodos HTTP** (`GET`, `POST`, `PUT`, `DELETE`).
+- Uso correto dos **status HTTP**.
+- Uso correto e consistente dos **paths**.
+- Validações básicas de entrada.
+- Estrutura organizada do código.
+  
+---
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+## 💾 Tecnologias Utilizadas
 
-## Creating a native executable
+- **Quarkus** (Framework principal)
+- **H2 Database** (Banco de dados em memória)
+- **Swagger/OpenAPI** (Documentação da API)
+- **Validação básica de entrada**
 
-You can create a native executable using:
+---
 
-```shell script
-./mvnw package -Dnative
-```
+## 🧩 Extensões Quarkus Utilizadas
+- quarkus-hibernate-orm
+- quarkus-jdbc-h2
+- quarkus-smallrye-openapi
+  
+---
+## ▶️ Como executar
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+1. Execute a aplicação em modo de desenvolvimento:
+   ```bash
+   ./mvnw quarkus:dev
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+2. Acesse a aplicação via navegador:
 
-You can then execute your native executable with: `./target/gerenciador-produto-1.0.0-SNAPSHOT-runner`
+☑️ Interface padrão: http://localhost:8080/
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+☑️ Interface Swagger: http://localhost:8080/q/swagger-ui/
 
-## Related Guides
+---
 
-- REST resources for Hibernate ORM with Panache ([guide](https://quarkus.io/guides/rest-data-panache)): Generate Jakarta REST resources for your Hibernate Panache entities and repositories
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
+## 🔗 Endpoints da API
 
-## Provided Code
-
-### REST Data with Panache
-
-Generating Jakarta REST resources with Panache
-
-[Related guide section...](https://quarkus.io/guides/rest-data-panache)
+| Método | Rota                                  | Descrição                           | Permissão                        |
+| ------ | ------------------------------------- | ----------------------------------- | -------------------------------- |
+| GET    | `/produtos                            | Retorna todos produtos cadastradas  |                                  |
+| GET    | `/produtos/{id}`                      | Retorna um produtopor ID            |                                  |
+| POST   | `/produtos                            | Cria um novo produto                |                                  |
+| PUT    | `/produtos/{id}`                      | Atualiza dados do produto           |                                  |
+| DELETE | `/produtos/{id}`                      | Exclui um produto                   |                                  |
 
 
-### REST
+---
 
-Easily start your REST Web Services
+🧪 Testes
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+✅ Como executar os testes
+
+`./mvnw test `
+
+🧪 Cobertura
+
+• 	Testes unitários com Mockito
+
+---
+🧠 Sugestão de Funcionalidades que Podem Ser Acrescentadas
+
+- **Mockito** (Testes unitários)
+- **Frontend** (Interface de usuário)
+- **Consumo de API externa** para obter UF via CEP
+- **quarkus-security** para habilitar a autenticação e autorização.
+- **Funcionalidades extras:** Relatório por agência; Histórico de transações (CRUD) por conta
+- 
+## 🧪 Testes e Qualidade
+1. Testes de Integração
+- Simular chamadas reais à API e verificar persistência no banco.
+2. Testes de Performance
+- Avaliar tempo de resposta da API com JMeter
+
+## 🛡️ Segurança e Autenticação
+1. Autenticação Basic Auth
+- Perfis admin e users no arquivo application-users.properties.
+- Perfis de acesso admin e users no arquivo application-roles.properties.
+
+## 📦 Deploy e Escalabilidade
+1. Containerização
+- Criar um Dockerfile para empacotar a aplicação.
+- Usar docker-compose para subir banco e API juntos.
+2. Deploy em Nuvem
+- Subir em serviços como Heroku, Railway, ou Azure.
+- Configurar variáveis de ambiente e persistência.
+---
+
+## 👥 Desenvolvedor
+
+- 👷 Genivaldo Ferreira da Silva
+ ---
