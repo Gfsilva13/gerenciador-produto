@@ -1,0 +1,63 @@
+package br.edu.ada.model;
+
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+
+@Entity
+public class Produto {
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    private String descricao;
+
+    @Column(nullable = false)
+    private BigDecimal preco;
+
+    public Produto() {
+    }
+
+    public Produto(Long id, String nome, String descricao, BigDecimal preco) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.preco = preco;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
+}
