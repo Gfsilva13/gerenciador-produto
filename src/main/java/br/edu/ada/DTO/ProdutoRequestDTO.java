@@ -1,20 +1,22 @@
 package br.edu.ada.DTO;
 
-import jakarta.validation.constraints.*;
-import org.hibernate.annotations.NotFound;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class ProdutoRequestDTO {
 
-    @NotBlank(message = "Nome é obrigatório")
+
+    @NotBlank(message = "Nome não deve ser vazio")
     private String nome;
 
     private String descricao;
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Preço deve ser maior que zero")
     private BigDecimal preco;
+
 
     public String getNome() {
         return nome;

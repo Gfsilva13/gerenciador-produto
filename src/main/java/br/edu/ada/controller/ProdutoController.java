@@ -1,15 +1,12 @@
 package br.edu.ada.controller;
 
 import br.edu.ada.DTO.ProdutoRequestDTO;
-import br.edu.ada.DTO.ProdutoResponseDTO;
-import br.edu.ada.Exceptions.ProdutoNaoEncontradoException;
+import br.edu.ada.Exceptions.ProdutoErroValidacaoException;
 import br.edu.ada.model.Produto;
 import br.edu.ada.service.ProdutoService;
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.enterprise.inject.build.compatible.spi.Validation;
-import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import jakarta.validation.executable.ValidateOnExecution;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -28,15 +25,21 @@ public class ProdutoController {
     }
 
     @POST
-    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Cadastrar novo produto",
             description = "Cadastra novo produto")
-    public Response cadastrarProduto(ProdutoRequestDTO produtoRequestDTO){
-        produtoService.cadastraProduto(produtoRequestDTO);
+    public Response cadastrarProduto(@Valid ProdutoRequestDTO produtoRequestDTO){
+        try {
+            produtoService.cadastraProduto(produtoRequestDTO);
             return Response.status(Response.Status.CREATED).
                     entity("Produto Cadastrado com sucesso").build();
-
+        } catch (ConstraintViolationException e) {
+            StringBuilder mensagens = new StringBuilder();
+            for (ConstraintViolation<?> violacao : e.getConstraintViolations()) {
+                mensagens.append(violacao.getMessage()).append("\n");
+            }
+            throw new ProdutoErroValidacaoException(mensagens.toString());
+        }
     }
 
     @GET
@@ -57,19 +60,26 @@ public class ProdutoController {
     }
 
     @PUT
-    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Alterar produto cadastrado",
             description = "Altera dados do produto com id informado")
     @Path ("{id}")
     public Response alterarProduto(@RestPath Long id, @Valid ProdutoRequestDTO produtoRequestDTO){
-        this.produtoService.alterarProduto(id, produtoRequestDTO);
-        return Response.status(Response.Status.OK)
+        try {
+            this.produtoService.alterarProduto(id, produtoRequestDTO);
+            return Response.status(Response.Status.OK)
                     .entity("Produto alterado com sucesso").build();
+        }
+        catch (ConstraintViolationException e) {
+            StringBuilder mensagens = new StringBuilder();
+            for (ConstraintViolation<?> violacao : e.getConstraintViolations()) {
+                mensagens.append(violacao.getMessage()).append("\n");
+            }
+            throw new ProdutoErroValidacaoException(mensagens.toString());
+        }
     }
 
     @DELETE
-    @Transactional
     @Operation(summary = "Excluir produto cadastrado",
             description = "Exclui produto com o id informado")
     @Path ("{id}")
