@@ -3,10 +3,10 @@
 ## 📘 Descrição
 
 Projeto desenvolvido como parte do curso *Quarkus Avançado*. O objetivo é criar uma **API REST** API REST para gerenciar produtos.  
-A API deve permitir realizar as operações de **CRUD (Create, Read, Update, Delete)** de produtos.
-
+- Exercício 1: Realizar as operações de **CRUD (Create, Read, Update, Delete)** de produtos.
+- Exercício 2: Adicionar **autenticação** à aplicação de gerenciamento de produtos. A autenticação deve ser feita utilizando o **Quarkus OIDC (`quarkus-oidc`)**, permitindo que apenas usuários autenticados possam acessar os endpoints da API.
 ---
-## 🚀 Requisitos Funcionais
+## 🚀 Requisitos Funcionais Exercício 1
 
 ### 1. Criar Produto
 - **Método HTTP:** `POST`
@@ -44,18 +44,14 @@ A API deve permitir realizar as operações de **CRUD (Create, Read, Update, Del
 - **Status esperado:**
     - `204 No Content` em caso de sucesso.
     - `404 Not Found` se o produto não existir.
-
 ---
-
 ## Modelo de Produto
 Cada produto deve possuir no mínimo os seguintes atributos:
 - `id` (gerado automaticamente)
 - `nome` (obrigatório)
 - `descricao` (opcional)
 - `preco` (obrigatório, maior que zero)
-
 ---
-
 ## Critérios de Avaliação (Exercício 1)
 
 - Uso correto dos **métodos HTTP** (`GET`, `POST`, `PUT`, `DELETE`).
@@ -63,8 +59,33 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - Uso correto e consistente dos **paths**.
 - Validações básicas de entrada.
 - Estrutura organizada do código.
-  
 ---
+## 🚀 Requisitos Funcionais Exercício 2
+
+### 1. Configuração do OIDC
+- Configure o Quarkus para usar `quarkus-oidc` com um **provedor OIDC** (exemplo: Keycloak).
+
+### 2. Proteção de Endpoints
+- Os endpoints da API `/produtos` devem exigir autenticação.
+
+### 3. Controle de Acesso por Papel (Roles)
+- Defina pelo menos dois papéis:
+    - **admin**: pode criar, atualizar e excluir produtos.
+    - **user**: pode apenas listar e buscar produtos.
+- A aplicação deve validar os papéis contidos no token JWT e permitir ou negar acesso de acordo.
+
+### 4. Exemplo de Regras de Acesso
+- **POST /produtos** → somente `admin`.
+- **PUT /produtos/{id}** → somente `admin`.
+- **DELETE /produtos/{id}** → somente `admin`.
+- **GET /produtos** e **GET /produtos/{id}** → `admin` e `user`.
+---
+## Critérios de Avaliação (Exercício 2)
+
+- Configuração correta do **quarkus-oidc**.
+- Proteção dos endpoints usando **anotações de segurança** (`@RolesAllowed`, `@Authenticated`).
+- Implementação correta das regras de acesso por papel.
+- Estrutura organizada do código e configuração.
 
 ## 💾 Tecnologias Utilizadas
 
@@ -72,14 +93,11 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - **H2 Database** (Banco de dados em memória)
 - **Swagger/OpenAPI** (Documentação da API)
 - **Validação básica de entrada**
-
 ---
-
 ## 🧩 Extensões Quarkus Utilizadas
 - quarkus-hibernate-orm
 - quarkus-jdbc-h2
 - quarkus-smallrye-openapi
-  
 ---
 ## ▶️ Como executar
 
@@ -94,20 +112,17 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 ☑️ Interface Swagger: http://localhost:8080/q/swagger-ui/
 
 ---
-
 ## 🔗 Endpoints da API
 
 | Método | Rota                                  | Descrição                           | Permissão                        |
 | ------ | ------------------------------------- | ----------------------------------- | -------------------------------- |
-| GET    | `/produtos                            | Retorna todos produtos cadastradas  |                                  |
+| GET    | `/produtos`                           | Retorna todos produtos cadastradas  |                                  |
 | GET    | `/produtos/{id}`                      | Retorna um produtopor ID            |                                  |
-| POST   | `/produtos                            | Cria um novo produto                |                                  |
+| POST   | `/produtos`                           | Cria um novo produto                |                                  |
 | PUT    | `/produtos/{id}`                      | Atualiza dados do produto           |                                  |
 | DELETE | `/produtos/{id}`                      | Exclui um produto                   |                                  |
 
-
 ---
-
 🧪 Testes
 
 ✅ Como executar os testes
@@ -121,15 +136,13 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 ---
 🧠 Sugestão de Funcionalidades que Podem Ser Acrescentadas
 
-- **Mockito** (Testes unitários)
 - **Frontend** (Interface de usuário)
-- **Consumo de API externa** para obter UF via CEP
 - **quarkus-security** para habilitar a autenticação e autorização.
-- **Funcionalidades extras:** Relatório por agência; Histórico de transações (CRUD) por conta
-- 
+- **Funcionalidades extras:** Relatório por produto; Histórico de produtos (CRUD)
+  
 ## 🧪 Testes e Qualidade
 1. Testes de Integração
-- Simular chamadas reais à API e verificar persistência no banco.
+- Simular chamadas reais à API e verificar persistência no banco
 2. Testes de Performance
 - Avaliar tempo de resposta da API com JMeter
 
