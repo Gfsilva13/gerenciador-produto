@@ -1,0 +1,71 @@
+{
+  "realm": "produto-manager",
+  "enabled": true,
+  "users": [
+    {
+      "username": "user",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456"
+        }
+      ],
+      "realmRoles": ["user"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456"
+        }
+      ],
+      "realmRoles": ["admin"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "gerenciador-produto",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "caixa-verso",
+      "redirectUris": [
+        "http://localhost:8081/"
+      ],
+      "webOrigins": [
+        "+"
+      ],
+      "protocol": "openid-connect",
+      "directAccessGrantsEnabled": true,
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+ ],
+
+ "roles": {
+    "realm": [
+      {
+        "name": "user"},
+      {
+        "name": "admin"}
+    ]
+  }
+}

@@ -2,23 +2,48 @@ package br.edu.ada.controller;
 
 import br.edu.ada.DTO.ProdutoRequestDTO;
 import br.edu.ada.Exceptions.ProdutoErroValidacaoException;
+import br.edu.ada.service.auditoria.AuditoriaService;
 import br.edu.ada.model.Produto;
 import br.edu.ada.service.ProdutoService;
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import io.quarkus.logging.Log;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.resteasy.reactive.RestPath;
 
 import java.util.List;
 
 @Path("/produtos")
+@RequestScoped
+@Authenticated
 public class ProdutoController {
+    @Inject
+    JsonWebToken jwt;
 
-    private final ProdutoService produtoService;
+//    @Inject
+//    Keycloak keycloak;
+//
+//    @Inject
+//    @Claim(standard = Claims.upn)
+//    String userId;
+
+//    @Inject
+//    AuditoriaConfig auditoriaConfig;
+
+    @Inject
+    AuditoriaService auditoriaService;
+
+    @Inject
+    private ProdutoService produtoService;
 
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
@@ -26,11 +51,30 @@ public class ProdutoController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin"})
+   // @CacheInvalidateAll(cacheName = "lista-produtos")
     @Operation(summary = "Cadastrar novo produto",
             description = "Cadastra novo produto")
     public Response cadastrarProduto(@Valid ProdutoRequestDTO produtoRequestDTO){
+
+        Log.info("Chamando método cadastraProduto() com método HTTP @POST");
+        //String senhaCriptografada = BCrypt.hashpw(produtoRequestDTO.getSenha(), BCrypt.gensalt());
+
+
+//        UserRepresentation userRepresentation = new UserRepresentation();
+//
+//        userRepresentation.setUsername(contaDTO.usuario());
+//        userRepresentation.setEmailVerified(true);
+//
+//        return keycloak.realm("quarkus")
+//                .users()
+//                .create(userRepresentation);
+//
+
         try {
             produtoService.cadastraProduto(produtoRequestDTO);
+            auditoriaService.auditar(" Produto:  "+produtoRequestDTO.getNome()+ " cadastrado");
+
             return Response.status(Response.Status.CREATED).
                     entity("Produto Cadastrado com sucesso").build();
         } catch (ConstraintViolationException e) {
@@ -44,14 +88,26 @@ public class ProdutoController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin", "user"})
     @Operation(summary = "Listar todos produtos cadastrados",
             description = "Retorna uma lista de produtos cadastrados")
-    public List<Produto> buscarProdutos() {
+    public List<Produto> buscarProdutos(
+            @QueryParam("page") Integer page,
+            @QueryParam("pageSize") Integer pageSize
+    ) {
+//        long startAt = System.currentTimeMillis();
+//        Log.info("Chamando método buscaProdutos() com o método HTTP @GET");
+//        Log.debug("Lista de produtos");
+//        Log.info("AuditoriaService injetada: " + auditoriaService.toString());
+//        long tempoQuePassou = System.currentTimeMillis() - startAt;
+//        Log.info("Lista contas executou em %d ms".formatted(tempoQuePassou));
+
         return this.produtoService.getProdutos();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin", "user"})
     @Path("{id}")
     @Operation(summary = "Buscar produto pelo 'id'",
             description = "Retorna um produto com o 'id' informado")
@@ -61,12 +117,15 @@ public class ProdutoController {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin"})
     @Operation(summary = "Alterar produto cadastrado",
             description = "Altera dados do produto com id informado")
     @Path ("{id}")
     public Response alterarProduto(@RestPath Long id, @Valid ProdutoRequestDTO produtoRequestDTO){
         try {
             this.produtoService.alterarProduto(id, produtoRequestDTO);
+            auditoriaService.auditar(" Produto:  "+produtoRequestDTO.getNome()+ " alterado");
+
             return Response.status(Response.Status.OK)
                     .entity("Produto alterado com sucesso").build();
         }
@@ -80,11 +139,14 @@ public class ProdutoController {
     }
 
     @DELETE
+    @RolesAllowed({"admin"})
     @Operation(summary = "Excluir produto cadastrado",
             description = "Exclui produto com o id informado")
     @Path ("{id}")
     public Response excluirProduto(@RestPath Long id){
         this.produtoService.excluirProduto(id);
+        auditoriaService.auditar(" Produto com id:  "+id+ " excluído");
+
         return Response.status(Response.Status.OK)
                 .entity("Produto deletado com sucesso").build();
     }

@@ -1,11 +1,12 @@
 package br.edu.ada.model;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
 @Entity
-public class Produto {
+public class Produto extends PanacheEntityBase {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -27,6 +28,7 @@ public class Produto {
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
+
     }
 
     public Long getId() {
@@ -57,7 +59,13 @@ public class Produto {
         return preco;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
+
+
 }
