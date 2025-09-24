@@ -44,7 +44,7 @@ Projeto desenvolvido como parte do curso *Quarkus Avançado*. O objetivo é cria
 - **Status esperado:**
     - `204 No Content` em caso de sucesso.
     - `404 Not Found` se o produto não existir.
----
+
 ## Modelo de Produto
 Cada produto deve possuir no mínimo os seguintes atributos:
 - `id` (gerado automaticamente)
@@ -60,6 +60,7 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - Validações básicas de entrada.
 - Estrutura organizada do código.
 ---
+
 ## 🚀 Requisitos Funcionais Exercício 2
 
 ### 1. Configuração do OIDC
@@ -93,11 +94,15 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - **H2 Database** (Banco de dados em memória)
 - **Swagger/OpenAPI** (Documentação da API)
 - **Validação básica de entrada**
+- **Quarkus OIDC com Keycloak**
 ---
 ## 🧩 Extensões Quarkus Utilizadas
 - quarkus-hibernate-orm
 - quarkus-jdbc-h2
 - quarkus-smallrye-openapi
+- quarkus-junit5-mockito
+- quakus-oidc
+- quarkus-keycloak-admin-rest-client
 ---
 ## ▶️ Como executar
 
@@ -116,11 +121,11 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 
 | Método | Rota                                  | Descrição                           | Permissão                        |
 | ------ | ------------------------------------- | ----------------------------------- | -------------------------------- |
-| GET    | `/produtos`                           | Retorna todos produtos cadastradas  |                                  |
-| GET    | `/produtos/{id}`                      | Retorna um produtopor ID            |                                  |
-| POST   | `/produtos`                           | Cria um novo produto                |                                  |
-| PUT    | `/produtos/{id}`                      | Atualiza dados do produto           |                                  |
-| DELETE | `/produtos/{id}`                      | Exclui um produto                   |                                  |
+| GET    | `/produtos`                           | Retorna todos produtos cadastradas  | @RolesAllowed({"admin", "user"}) |
+| GET    | `/produtos/{id}`                      | Retorna um produtopor ID            | @RolesAllowed({"admin", "user"}) |
+| POST   | `/produtos`                           | Cria um novo produto                | @RolesAllowed({"admin"})         |
+| PUT    | `/produtos/{id}`                      | Atualiza dados do produto           | @RolesAllowed({"admin"})         |
+| DELETE | `/produtos/{id}`                      | Exclui um produto                   | @RolesAllowed({"admin"})         |
 
 ---
 🧪 Testes
@@ -133,11 +138,15 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 
 • 	Testes unitários com Mockito
 
+--- 
+## 🛡️ Segurança e Autenticação
+- **quarkus-security** para habilitar a autenticação e autorização.
+- Perfis admin e users no arquivo produto-manager-realm.json
+
 ---
 🧠 Sugestão de Funcionalidades que Podem Ser Acrescentadas
 
 - **Frontend** (Interface de usuário)
-- **quarkus-security** para habilitar a autenticação e autorização.
 - **Funcionalidades extras:** Relatório por produto; Histórico de produtos (CRUD)
   
 ## 🧪 Testes e Qualidade
@@ -145,11 +154,6 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - Simular chamadas reais à API e verificar persistência no banco
 2. Testes de Performance
 - Avaliar tempo de resposta da API com JMeter
-
-## 🛡️ Segurança e Autenticação
-1. Autenticação Basic Auth
-- Perfis admin e users no arquivo application-users.properties.
-- Perfis de acesso admin e users no arquivo application-roles.properties.
 
 ## 📦 Deploy e Escalabilidade
 1. Containerização
