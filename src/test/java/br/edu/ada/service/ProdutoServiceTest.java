@@ -12,7 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+
 import static br.edu.ada.service.utils.ProdutoDTOTest.criaProdutoDTO;
+import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 @QuarkusTest
 public class ProdutoServiceTest {
@@ -121,5 +126,20 @@ public class ProdutoServiceTest {
     public void deveNaoExcluirProdutoInexistente(){
 
     }
+
+    @Test
+    public void deveBuscarPorId() {
+//        Produto produto = new Produto(1L, "TesteNome", "TesteDescriçao", BigDecimal.valueOf(300.00));
+//        when(produtoRepository.findByIdOptional(1L)).thenReturn(Optional.of(produto));
+//        Produto produtoEncontrado = (Produto) produtoService.getProduto(1L);
+//
+//        assertNotNull(produtoEncontrado);
+//        assertEquals("TesteNome", produtoEncontrado.getNome());
+//        assertEquals("TesteDescriçao", produtoEncontrado.getDescricao());
+//        assertEquals(BigDecimal.valueOf(300.00), produtoEncontrado.getPreco());
+//
+//        Mockito.verify(produtoRepository).findByIdOptional(1L);
+    }
+
 
 }
