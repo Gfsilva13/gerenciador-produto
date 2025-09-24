@@ -1,20 +1,25 @@
 package br.edu.ada.service;
 
 import br.edu.ada.DTO.ProdutoRequestDTO;
-import br.edu.ada.Exceptions.ProdutoErroValidacaoException;
 import br.edu.ada.Exceptions.ProdutoNaoEncontradoException;
 import br.edu.ada.DTO.Mapper.ProdutoMapper;
+//import br.edu.ada.cache.SimplesKeyGeneratorNull;
 import br.edu.ada.model.Produto;
 import br.edu.ada.repository.ProdutoRepository;
+import io.quarkus.logging.Log;
+import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 
 import java.util.List;
 
 @ApplicationScoped
 public class ProdutoService {
+
+//    @Inject
+//    @CacheName("lista-produtos")
+//    Cache cache;
 
     private final ProdutoRepository produtoRepository;
     private final ProdutoMapper produtoMapper;
@@ -30,8 +35,10 @@ public class ProdutoService {
       produtoRepository.persist(produto);
     }
 
+    //@CacheResult(cacheName = "lista-produtos", keyGenerator = SimplesKeyGeneratorNull.class)
     public List<Produto> getProdutos() {
-        return produtoRepository.findAll().list();
+        Log.info("Buscando do banco de dados");
+        return produtoRepository.findAll(Sort.ascending("nome")).list();
     }
 
     public Object getProduto(Long id){
@@ -44,6 +51,7 @@ public class ProdutoService {
         var produtoCadastrado = produtoRepository.findByIdOptional(id)
                 .orElseThrow(()-> new ProdutoNaoEncontradoException(id));
         produtoMapper.updateEntityFromDTO(produtoRequestDTO, produtoCadastrado);
+
     }
 
     @Transactional

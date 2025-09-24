@@ -8,7 +8,6 @@ import java.math.RoundingMode;
 
 public class ProdutoRequestDTO {
 
-
     @NotBlank(message = "Nome não deve ser vazio")
     private String nome;
 
@@ -16,7 +15,6 @@ public class ProdutoRequestDTO {
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Preço deve ser maior que zero")
     private BigDecimal preco;
-
 
     public String getNome() {
         return nome;
@@ -41,4 +39,5 @@ public class ProdutoRequestDTO {
     public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
+
 }
