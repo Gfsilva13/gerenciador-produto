@@ -171,7 +171,7 @@ A aplicação que vai consumir pode ser a mesma que vai produzir.
    ```bash
        http://localhost:53355/realms/produto-manager/protocol/openid-connect/token
 5. Acesse a aplicação via navegador:
-☑️ Interface Swagger: http://localhost:8080/q/swagger-ui/
+☑️ Interface Swagger: http://localhost:8081/q/swagger-ui/
 
    🔗   roles : "user" - password "123456"
    
