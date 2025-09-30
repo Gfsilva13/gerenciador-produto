@@ -87,7 +87,64 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - Proteção dos endpoints usando **anotações de segurança** (`@RolesAllowed`, `@Authenticated`).
 - Implementação correta das regras de acesso por papel.
 - Estrutura organizada do código e configuração.
+---
 
+# 🚀 Exercício 3
+
+## Descrição
+
+Além do CRUD de produtos já implementado no **Exercício 1**, você deverá adicionar **cache** para melhorar a performance da aplicação.  
+
+O cache deve ser utilizado no endpoint de **buscar produto por ID**, e sempre que houver alguma alteração em um produto (criação, atualização ou exclusão), o cache correspondente deve ser invalidado.
+
+---
+
+## Requisitos Funcionais
+
+### 1. Buscar Produto por ID com Cache
+
+- **Método HTTP:** `GET`
+- **Path:** `/produtos/{id}`
+- O resultado da busca deve ser armazenado em cache para acessos futuros ao mesmo produto.
+- **Status esperado:**
+  - `200 OK` em caso de sucesso.
+  - `404 Not Found` se o produto não existir.
+
+### 2. Invalidar Cache ao Alterar Produto
+
+Sempre que ocorrer uma das operações abaixo, o cache do produto correspondente deve ser removido/invalidado:
+
+- **Atualizar Produto (`PUT /produtos/{id}`)** → invalida cache do produto atualizado.  
+- **Excluir Produto (`DELETE /produtos/{id}`)** → invalida cache do produto removido.  
+
+---
+
+## Critérios de Avaliação (Exercício 3)
+
+- Uso correto do **cache** no endpoint de busca de produto por ID.
+- Invalidação correta do cache nas operações de alteração.
+- Manutenção do uso correto de **status HTTP** e **métodos HTTP** já definidos no Exercício 1.
+- Organização e clareza do código.  
+
+## Bônus
+
+Documentação: https://quarkus.io/guides/kafka
+
+Quando a aplicação criar uma conta, enviar uma mensagem utilizando `quarkus-smallrye-kafka`.
+
+A mensagem deve ter os seguintes atributos:
+
+```yaml
+nome: String
+descricao: String
+preco: BigDecimal
+id: Long
+dataCriacao: Instant
+```
+
+A aplicação que vai consumir pode ser a mesma que vai produzir.
+
+---
 ## 💾 Tecnologias Utilizadas
 
 - **Quarkus** (Framework principal)
@@ -106,15 +163,23 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 ---
 ## ▶️ Como executar
 
-1. Execute a aplicação em modo de desenvolvimento:
+1. keycloak: realm 'produto-manager'
+2. Execute a aplicação em modo de desenvolvimento:
    ```bash
-   ./mvnw quarkus:dev
+       docker compose up 
+3. Criar Token no Postman:
+   ```bash
+       http://localhost:53355/realms/produto-manager/protocol/openid-connect/token
+5. Acesse a aplicação via navegador:
+☑️ Interface Swagger: http://localhost:8081/q/swagger-ui/
 
-2. Acesse a aplicação via navegador:
+   🔗   roles : "user" - password "123456"
+   
+   🔗   roles : "admin" - password "123456"
 
-☑️ Interface padrão: http://localhost:8080/
-
-☑️ Interface Swagger: http://localhost:8080/q/swagger-ui/
+   🔗   client_id: gerenciador-produto
+   
+   🔗   client_secret: caixa-verso
 
 ---
 ## 🔗 Endpoints da API
@@ -144,6 +209,11 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - Perfis admin e users no arquivo produto-manager-realm.json
 
 ---
+## 📦Containerização
+- Dockerfile para empacotar a aplicação.
+- docker-compose para subir API.
+
+---  
 🧠 Sugestão de Funcionalidades que Podem Ser Acrescentadas
 
 - **Frontend** (Interface de usuário)
@@ -156,10 +226,7 @@ Cada produto deve possuir no mínimo os seguintes atributos:
 - Avaliar tempo de resposta da API com JMeter
 
 ## 📦 Deploy e Escalabilidade
-1. Containerização
-- Criar um Dockerfile para empacotar a aplicação.
-- Usar docker-compose para subir banco e API juntos.
-2. Deploy em Nuvem
+1. Deploy em Nuvem
 - Subir em serviços como Heroku, Railway, ou Azure.
 - Configurar variáveis de ambiente e persistência.
 ---
