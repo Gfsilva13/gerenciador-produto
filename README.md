@@ -177,6 +177,10 @@ A aplicação que vai consumir pode ser a mesma que vai produzir.
    
    🔗   roles : "admin" - password "123456"
 
+   🔗   client_id: gerenciador-produto
+   
+   🔗   client_secret: caixa-verso
+
 ---
 ## 🔗 Endpoints da API
 
