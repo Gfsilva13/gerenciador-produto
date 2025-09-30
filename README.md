@@ -163,15 +163,19 @@ A aplicação que vai consumir pode ser a mesma que vai produzir.
 ---
 ## ▶️ Como executar
 
-1. Execute a aplicação em modo de desenvolvimento:
+1. keycloak: realm 'produto-manager'
+2. Execute a aplicação em modo de desenvolvimento:
    ```bash
-   ./mvnw quarkus:dev
-
-2. Acesse a aplicação via navegador:
-
-☑️ Interface padrão: http://localhost:8080/
-
+       docker compose up 
+3. Criar Token no Postman:
+   ```bash
+       http://localhost:53355/realms/produto-manager/protocol/openid-connect/token
+5. Acesse a aplicação via navegador:
 ☑️ Interface Swagger: http://localhost:8080/q/swagger-ui/
+
+   🔗   roles : "user" - password "123456"
+   
+   🔗   roles : "admin" - password "123456"
 
 ---
 ## 🔗 Endpoints da API
@@ -201,6 +205,11 @@ A aplicação que vai consumir pode ser a mesma que vai produzir.
 - Perfis admin e users no arquivo produto-manager-realm.json
 
 ---
+## 📦Containerização
+- Dockerfile para empacotar a aplicação.
+- docker-compose para subir API.
+
+---  
 🧠 Sugestão de Funcionalidades que Podem Ser Acrescentadas
 
 - **Frontend** (Interface de usuário)
@@ -213,10 +222,7 @@ A aplicação que vai consumir pode ser a mesma que vai produzir.
 - Avaliar tempo de resposta da API com JMeter
 
 ## 📦 Deploy e Escalabilidade
-1. Containerização
-- Criar um Dockerfile para empacotar a aplicação.
-- Usar docker-compose para subir banco e API juntos.
-2. Deploy em Nuvem
+1. Deploy em Nuvem
 - Subir em serviços como Heroku, Railway, ou Azure.
 - Configurar variáveis de ambiente e persistência.
 ---
