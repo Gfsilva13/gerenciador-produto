@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   keycloak:
@@ -12,5 +12,50 @@ services:
     command:
       - start-dev
       - --import-realm
+      - --health-enabled=true
+      - --features=preview
     volumes:
       - ./realms:/opt/keycloak/data/import
+    networks:
+      - quarkus-net
+    healthcheck:
+        test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8080/health/ready" ]
+        interval: 10s
+        timeout: 10s
+        retries: 10
+        disable: true
+
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - quarkus-net
+
+  quarkus-app:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    container_name: gerenciador-produto
+    depends_on:
+      - redis
+    entrypoint: >
+       sh -c "
+       until curl -sf http://keycloak-quarkus:8080/realms/produto-manager/.well-known/openid-configuration; do
+       echo '⏳ Aguardando Keycloak...';
+       sleep 5;
+       done;
+       echo '✅ Keycloak disponível!';
+       exec java -jar /deployments/quarkus-run.jar
+        "
+
+    ports:
+      - "8081:8081"
+    networks:
+      - quarkus-net
+
+networks:
+  quarkus-net:
+   driver: bridge

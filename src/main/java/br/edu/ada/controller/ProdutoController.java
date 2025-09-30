@@ -16,8 +16,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import io.quarkus.logging.Log;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.jboss.resteasy.reactive.RestPath;
 
 import java.util.List;
@@ -25,20 +25,8 @@ import java.util.List;
 @Path("/produtos")
 @RequestScoped
 @Authenticated
+@SecurityRequirement(name = "BearerAuth")
 public class ProdutoController {
-    @Inject
-    JsonWebToken jwt;
-
-//    @Inject
-//    Keycloak keycloak;
-//
-//    @Inject
-//    @Claim(standard = Claims.upn)
-//    String userId;
-
-//    @Inject
-//    AuditoriaConfig auditoriaConfig;
-
     @Inject
     AuditoriaService auditoriaService;
 
@@ -52,25 +40,11 @@ public class ProdutoController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({"admin"})
-   // @CacheInvalidateAll(cacheName = "lista-produtos")
     @Operation(summary = "Cadastrar novo produto",
             description = "Cadastra novo produto")
     public Response cadastrarProduto(@Valid ProdutoRequestDTO produtoRequestDTO){
 
         Log.info("Chamando método cadastraProduto() com método HTTP @POST");
-        //String senhaCriptografada = BCrypt.hashpw(produtoRequestDTO.getSenha(), BCrypt.gensalt());
-
-
-//        UserRepresentation userRepresentation = new UserRepresentation();
-//
-//        userRepresentation.setUsername(contaDTO.usuario());
-//        userRepresentation.setEmailVerified(true);
-//
-//        return keycloak.realm("quarkus")
-//                .users()
-//                .create(userRepresentation);
-//
-
         try {
             produtoService.cadastraProduto(produtoRequestDTO);
             auditoriaService.auditar(" Produto:  "+produtoRequestDTO.getNome()+ " cadastrado");
@@ -95,14 +69,7 @@ public class ProdutoController {
             @QueryParam("page") Integer page,
             @QueryParam("pageSize") Integer pageSize
     ) {
-//        long startAt = System.currentTimeMillis();
-//        Log.info("Chamando método buscaProdutos() com o método HTTP @GET");
-//        Log.debug("Lista de produtos");
-//        Log.info("AuditoriaService injetada: " + auditoriaService.toString());
-//        long tempoQuePassou = System.currentTimeMillis() - startAt;
-//        Log.info("Lista contas executou em %d ms".formatted(tempoQuePassou));
-
-        return this.produtoService.getProdutos();
+      return this.produtoService.getProdutos();
     }
 
     @GET
@@ -111,7 +78,17 @@ public class ProdutoController {
     @Path("{id}")
     @Operation(summary = "Buscar produto pelo 'id'",
             description = "Retorna um produto com o 'id' informado")
-    public Response buscarProdutoPorId(@RestPath Long id) {
+    public Response buscarProdutoPorId(@RestPath Long id,
+                                       @QueryParam("page") Integer page,
+                                       @QueryParam("pageSize") Integer pageSize
+    ) {
+        long startAt = System.currentTimeMillis();
+        Log.info("Chamando método buscarProdutoPorId() com o método HTTP @GET");
+        Log.debug("Lista de produto Id = "+id);
+        Log.info("AuditoriaService injetada: " + auditoriaService.toString());
+        long tempoQuePassou = System.currentTimeMillis() - startAt;
+        Log.info("Busca produto id= "+id+" executou em %d ms".formatted(tempoQuePassou));
+
         return Response.ok(produtoService.getProduto(id)).build();
     }
 

@@ -120,12 +120,15 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-security</artifactId>
         </dependency>
-
-        <!--Aula 5-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-redis-cache</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-swagger-ui</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
