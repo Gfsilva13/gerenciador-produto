@@ -33,7 +33,6 @@ public class ProdutoServiceTest {
     @BeforeEach
     public void setUp() {
         Mockito.doNothing().when(produtoRepository).persist(Mockito.any(Produto.class));
-        //Mockito.when(ProdutoService.findById(0L)).thenReturn(null);
     }
 
     @Test
@@ -129,16 +128,7 @@ public class ProdutoServiceTest {
 
     @Test
     public void deveBuscarPorId() {
-//        Produto produto = new Produto(1L, "TesteNome", "TesteDescriçao", BigDecimal.valueOf(300.00));
-//        when(produtoRepository.findByIdOptional(1L)).thenReturn(Optional.of(produto));
-//        Produto produtoEncontrado = (Produto) produtoService.getProduto(1L);
-//
-//        assertNotNull(produtoEncontrado);
-//        assertEquals("TesteNome", produtoEncontrado.getNome());
-//        assertEquals("TesteDescriçao", produtoEncontrado.getDescricao());
-//        assertEquals(BigDecimal.valueOf(300.00), produtoEncontrado.getPreco());
-//
-//        Mockito.verify(produtoRepository).findByIdOptional(1L);
+
     }
 
 
